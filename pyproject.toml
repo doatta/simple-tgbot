@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "simple-tgbot"
-version = "0.1.0"
+version = "0.2.0"
 description = "Telegram bot for antispam and etc."
 authors = ["doatta"]
 license = "MIT"
@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.12"
 python-telegram-bot = "^21.1.1"
 pyyaml = "^6.0.1"
+gitpython = "^3.1.43"
 
 
 [tool.poetry.group.dev.dependencies]

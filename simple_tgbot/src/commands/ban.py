@@ -10,14 +10,14 @@ async def ban(message: Message, phrase):
     await message.delete()
 
 
-# Define a `/ban` command handler.
 async def ban_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    from simple_tgbot.src.messages import check_message
+    """Reply to sus message with /ban. In order to make some message sus, please refer to /ban_add"""
+    from simple_tgbot.src.chat.messages import check_message
 
     """Replies to ban"""
     if not update.message.reply_to_message or not update.message.reply_to_message.text:
-        await update.message.reply_text("Reply to sus message with /ban")
-    if await check_message(update.message.reply_to_message):
+        await update.message.reply_text(ban_command.__doc__)
+    if await check_message(update.message.reply_to_message, context):
         await update.message.set_reaction(reaction="❤")
     else:
         await update.message.reply_text("Not sus")

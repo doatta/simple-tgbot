@@ -11,12 +11,14 @@ from telegram.ext import (
     MessageHandler,
     ChatJoinRequestHandler,
     filters,
+    PollAnswerHandler,
 )
 from telegram.error import InvalidToken
 
-from simple_tgbot.src.ban import ban_command
-from simple_tgbot.src.join import join_request
-from simple_tgbot.src.messages import messages_flow
+from simple_tgbot.src.commands.commands import bot_commands
+from simple_tgbot.src.commands.ban_add import poll_answers
+from simple_tgbot.src.chat.join import join_request
+from simple_tgbot.src.chat.messages import messages_flow
 
 # Enable logging
 logging.basicConfig(
@@ -40,7 +42,7 @@ def parse_args() -> argparse.Namespace:
     )
     args = parser.parse_args()
 
-    if not args.telegram_token and not args.secret_name:
+    if not args.telegram_token:
         raise KeyError(
             "Please define ENV variable TELEGRAM_TOKEN,run script with parameter --telegram-token <token-value> or provide secret name with -s"
         )
@@ -57,8 +59,11 @@ def main() -> None:
     application = Application.builder().token(args.telegram_token).build()
 
     # Handlers define what bot does
+    for command, callback in bot_commands.items():
+        application.add_handler(CommandHandler(command=command, callback=callback))
+        logger.info(f"Registered handler for /{command}")
     application.add_handler(ChatJoinRequestHandler(join_request))
-    application.add_handler(CommandHandler("ban", ban_command))
+    application.add_handler(PollAnswerHandler(poll_answers))
     application.add_handler(MessageHandler(filters.ALL, messages_flow))
 
     # Start the bot
